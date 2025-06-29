@@ -1,39 +1,36 @@
 <?php
-// Step 1: Get controller and action from URL query string
-$controller = $_GET['controller'] ?? 'client';  // Default to 'client'
-$action = $_GET['action'] ?? 'index';           // Default to 'index'
+$controller = $_GET['controller'] ?? 'client';
+$action = $_GET['action'] ?? 'index';
 
-// Step 2: Debug — Show which controller/action was received
-echo "DEBUG: Controller = $controller, Action = $action<br>";
+//echo "DEBUG: Controller = $controller, Action = $action<br>";
 
-// Step 3: Route to correct controller based on value of $controller
-if ($controller === 'client') {
-    // Include the client controller
-    require_once __DIR__ . '/../controllers/ClientController.php';
+switch ($controller) {
+    case 'client':
+        require_once __DIR__ . '/../controllers/ClientController.php';
+        $clientController = new ClientController();
+        $handler = $clientController;
+        break;
 
-    // Create a ClientController instance
-    $clientController = new ClientController();
+    case 'contact':
+        require_once __DIR__ . '/../controllers/ContactController.php';
+        $contactController = new ContactController();
+        $handler = $contactController;
+        break;
 
-    // Call the action method if it exists
-    if (method_exists($clientController, $action)) {
-        $clientController->$action();
-    } else {
-        echo "❌ Error: Client action '$action' not found.";
-    }
-} elseif ($controller === 'contact') {
-    // Include the contact controller
-    require_once __DIR__ . '/../controllers/ContactController.php';
+    case 'link':
+        require_once __DIR__ . '/../controllers/LinkController.php';
+        $linkController = new LinkController();
+        $handler = $linkController;
+        break;
 
-    // Create a ContactController instance
-    $contactController = new ContactController();
+    default:
+        echo "❌ Error: Controller '$controller' not recognized.";
+        exit;
+}
 
-    // Call the action method if it exists
-    if (method_exists($contactController, $action)) {
-        $contactController->$action();
-    } else {
-        echo "❌ Error: Contact action '$action' not found.";
-    }
+if (method_exists($handler, $action)) {
+    $handler->$action();
 } else {
-    echo "❌ Error: Controller '$controller' not recognized.";
+    echo "❌ Error: Action '$action' not found in controller '$controller'.";
 }
 

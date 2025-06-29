@@ -7,7 +7,7 @@ class Database {
     private $password = 'Tjpiko6462';
     public $conn;
 
-    // Connect to the database using PDO
+    // Connect to the database using PDO(PHP data object)
     public function connect() {
         $this->conn = null;
 
